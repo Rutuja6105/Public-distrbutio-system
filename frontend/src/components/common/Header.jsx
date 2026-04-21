@@ -25,9 +25,12 @@ export const Header = ({ onProfileClick }) => {
           
           <div className="user-info" onClick={onProfileClick}>
             <img 
-              src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&color=fff`} 
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=3b82f6&color=fff`} 
               alt="Profile" 
               className="user-avatar"
+              onError={(e) => {
+                e.target.src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+              }}
             />
             <div className="user-details">
               <span className="user-name">{user?.name}</span>

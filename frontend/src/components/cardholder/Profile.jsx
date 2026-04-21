@@ -38,9 +38,12 @@ const Profile = () => {
         <div className="profile-header-main">
           <div className="profile-avatar-container">
             <img 
-              src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&size=128&background=random&color=fff`} 
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&size=128&background=3b82f6&color=fff`} 
               alt="Profile" 
               className="profile-main-avatar"
+              onError={(e) => {
+                e.target.src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y&s=128';
+              }}
             />
             <button className="avatar-edit-btn" type="button">✏️</button>
           </div>
