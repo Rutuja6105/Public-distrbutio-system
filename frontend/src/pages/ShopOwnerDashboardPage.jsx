@@ -401,14 +401,6 @@ const ShopOwnerDashboardPage = () => {
               <span className="sidebar-icon">📊</span>
               <span className="sidebar-label">{t('dashboard')}</span>
             </a>
-            <a 
-              href="#profile" 
-              className={`sidebar-item ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={(e) => { e.preventDefault(); setActiveTab('profile'); }}
-            >
-              <span className="sidebar-icon">👤</span>
-              <span className="sidebar-label">{t('profile')}</span>
-            </a>
           </nav>
         </aside>
 
