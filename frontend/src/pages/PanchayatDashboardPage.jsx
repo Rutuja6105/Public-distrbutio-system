@@ -38,9 +38,9 @@ const PanchayatDashboardPage = () => {
     { id: 2, textKey: 'complaint_marking_error', state: 'open' }
   ]);
   const [beneficiaries] = useState([
-    { id: 1, headName: 'Ravi Kumar', rationCardNo: 'RC-1021', address: `${VILLAGE_NAME} Ward 1`, totalMembers: 4, cardType: 'orange' },
-    { id: 2, headName: 'Sita Devi', rationCardNo: 'RC-1022', address: `${VILLAGE_NAME} Ward 2`, totalMembers: 5, cardType: 'white' },
-    { id: 3, headName: 'Imran Ali', rationCardNo: 'RC-1023', address: `${VILLAGE_NAME} Ward 3`, totalMembers: 3, cardType: 'yellow' }
+    { id: 1, headName: 'Ravi Kumar', rationCardNo: 'RC-1021', phone: '9876543210', address: `${VILLAGE_NAME} Ward 1`, totalMembers: 4, cardType: 'orange' },
+    { id: 2, headName: 'Sita Devi', rationCardNo: 'RC-1022', phone: '9876543211', address: `${VILLAGE_NAME} Ward 2`, totalMembers: 5, cardType: 'white' },
+    { id: 3, headName: 'Imran Ali', rationCardNo: 'RC-1023', phone: '9876543212', address: `${VILLAGE_NAME} Ward 3`, totalMembers: 3, cardType: 'yellow' }
   ]);
   const [firebaseConfig, setFirebaseConfig] = useState(() => {
     try {
@@ -241,6 +241,7 @@ const PanchayatDashboardPage = () => {
                       <tr>
                         <th align="left">{t('headOfFamily')}</th>
                         <th align="left">{t('rationCardNumber')}</th>
+                        <th align="left">{t('phoneNumber') || 'Phone Number'}</th>
                         <th align="left">{t('rationCardType')}</th>
                         <th align="left">{t('address')}</th>
                         <th align="left">{t('totalMembers')}</th>
@@ -252,6 +253,7 @@ const PanchayatDashboardPage = () => {
                           <tr key={beneficiary.id}>
                             <td>{beneficiary.headName}</td>
                             <td>{beneficiary.rationCardNo}</td>
+                            <td>{beneficiary.phone || 'N/A'}</td>
                             <td>{t(`cardType_${beneficiary.cardType}`) || beneficiary.cardType}</td>
                             <td>{beneficiary.address}</td>
                             <td>{beneficiary.totalMembers}</td>
