@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import Input from '../common/Input';
+import Button from '../common/Button';
 
 const HoldersList = () => {
   const [search, setSearch] = useState('');
+  const [selectedHolder, setSelectedHolder] = useState(null);
+  const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
   
   const holders = [
     { id: 'RC001', name: 'Ramesh Kumar', phone: '9876543210', address: 'Street 1, Area A', members: 4 },
@@ -15,6 +19,22 @@ const HoldersList = () => {
     h.name.toLowerCase().includes(search.toLowerCase()) || 
     h.id.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    setIsSending(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      console.log(`Sending message to ${selectedHolder.phone}: ${message}`);
+      alert(`Message successfully sent to ${selectedHolder.name} (${selectedHolder.phone})`);
+      setIsSending(false);
+      setSelectedHolder(null);
+      setMessage('');
+    }, 1000);
+  };
 
   return (
     <div>
@@ -53,9 +73,18 @@ const HoldersList = () => {
                   <td>{holder.address}</td>
                   <td>{holder.members}</td>
                   <td>
-                    <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}>
-                      View Details
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}>
+                        View
+                      </button>
+                      <button 
+                        className="btn btn-primary" 
+                        style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}
+                        onClick={() => setSelectedHolder(holder)}
+                      >
+                        Message
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -63,6 +92,56 @@ const HoldersList = () => {
           </table>
         </div>
       </div>
+
+      {/* Message Modal */}
+      {selectedHolder && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3 className="modal-title">Send Message to {selectedHolder.name}</h3>
+              <button className="modal-close" onClick={() => setSelectedHolder(null)}>&times;</button>
+            </div>
+            <form onSubmit={handleSendMessage}>
+              <div className="modal-body">
+                <div style={{ marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+                    Recipient: <strong>{selectedHolder.phone}</strong>
+                  </p>
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Message Content</label>
+                  <textarea
+                    className="input-field"
+                    rows="4"
+                    placeholder="Type your message here..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <Button 
+                  type="button" 
+                  variant="secondary" 
+                  onClick={() => setSelectedHolder(null)}
+                  disabled={isSending}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  variant="primary"
+                  disabled={isSending || !message.trim()}
+                >
+                  {isSending ? 'Sending...' : 'Send SMS'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
