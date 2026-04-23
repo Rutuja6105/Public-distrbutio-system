@@ -150,19 +150,6 @@ const PanchayatDashboardPage = () => {
     <div>
       <Header onProfileClick={() => setActiveTab('profile')} />
       <div className="dashboard-layout">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <a 
-              href="#dashboard" 
-              className={`sidebar-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-              onClick={(e) => { e.preventDefault(); setActiveTab('dashboard'); }}
-            >
-              <span className="sidebar-icon">📊</span>
-              <span className="sidebar-label">{t('dashboard')}</span>
-            </a>
-          </nav>
-        </aside>
-
         <main className="dashboard-main">
           {activeTab === 'profile' ? (
             <Profile />
