@@ -31,6 +31,11 @@ const initialBeneficiaries = [
     address: `${VILLAGE_NAME} Ward 1`,
     totalMembers: 1,
     cardType: 'orange',
+    headAge: '45',
+    headBirthDate: '1980-01-01',
+    headGender: 'male',
+    headIncome: '50000',
+    headAadhaar: '123456789012',
     familyMembers: [{ name: 'Suman Kumar', age: '35', birthDate: '1990-01-01', gender: 'female', occupation: 'Housewife', aadhaar: '123456789012' }]
   },
   {
@@ -43,6 +48,11 @@ const initialBeneficiaries = [
     address: `${VILLAGE_NAME} Ward 2`,
     totalMembers: 1,
     cardType: 'white',
+    headAge: '50',
+    headBirthDate: '1975-05-05',
+    headGender: 'female',
+    headIncome: '30000',
+    headAadhaar: '223456789012',
     familyMembers: [{ name: 'Ram Devi', age: '40', birthDate: '1985-05-05', gender: 'male', occupation: 'Farmer', aadhaar: '223456789012' }]
   },
   {
@@ -55,6 +65,11 @@ const initialBeneficiaries = [
     address: `${VILLAGE_NAME} Ward 3`,
     totalMembers: 1,
     cardType: 'yellow',
+    headAge: '35',
+    headBirthDate: '1990-10-10',
+    headGender: 'male',
+    headIncome: '40000',
+    headAadhaar: '323456789012',
     familyMembers: [{ name: 'Sara Ali', age: '25', birthDate: '2000-10-10', gender: 'female', occupation: 'Student', aadhaar: '323456789012' }]
   }
 ];
@@ -258,6 +273,11 @@ const ShopOwnerDashboardPage = () => {
               address: beneficiaryForm.address.trim(),
               cardType: beneficiaryForm.cardType,
               totalMembers: beneficiaryForm.familyMembers.length,
+              headAge: beneficiaryForm.headAge,
+              headBirthDate: beneficiaryForm.headBirthDate,
+              headGender: beneficiaryForm.headGender,
+              headIncome: beneficiaryForm.headIncome,
+              headAadhaar: beneficiaryForm.headAadhaar,
               familyMembers: beneficiaryForm.familyMembers
             }
             : item
@@ -279,6 +299,11 @@ const ShopOwnerDashboardPage = () => {
         address: beneficiaryForm.address.trim(),
         cardType: beneficiaryForm.cardType,
         totalMembers: beneficiaryForm.familyMembers.length,
+        headAge: beneficiaryForm.headAge,
+        headBirthDate: beneficiaryForm.headBirthDate,
+        headGender: beneficiaryForm.headGender,
+        headIncome: beneficiaryForm.headIncome,
+        headAadhaar: beneficiaryForm.headAadhaar,
         familyMembers: beneficiaryForm.familyMembers
       };
 
@@ -310,11 +335,11 @@ const ShopOwnerDashboardPage = () => {
     setEditingId(person.id);
     setBeneficiaryForm({
       headName: person.name,
-      headAge: '', // These fields are not in the main table data yet, so we leave them blank or extend the data
-      headBirthDate: '',
-      headGender: '',
-      headIncome: '',
-      headAadhaar: '',
+      headAge: person.headAge || '',
+      headBirthDate: person.headBirthDate || '',
+      headGender: person.headGender || '',
+      headIncome: person.headIncome || '',
+      headAadhaar: person.headAadhaar || '',
       phone: person.phone || '',
       rationCardNo: person.cardNo,
       address: person.address,
