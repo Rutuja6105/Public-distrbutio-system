@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
+import { api } from '../../services/api';
 
 const SendNotification = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     message: '',
-    type: 'all'
+    type: 'all',
+    mobileNumber: ''
   });
 
   const handleChange = (e) => {
@@ -16,9 +19,30 @@ const SendNotification = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Notification sent successfully!');
+    setLoading(true);
+    try {
+      const response = await api.post('/notifications', {
+        title: formData.title,
+        message: formData.message,
+        type: formData.type,
+        mobileNumber: formData.type === 'specific' ? formData.mobileNumber : undefined
+      });
+      
+      console.log('API Response:', response);
+      alert(response.message || 'Notification sent successfully!');
+      
+      // Reset form if successful
+      if (formData.type === 'specific') {
+        setFormData({ ...formData, mobileNumber: '' });
+      }
+    } catch (error) {
+      console.error('Failed to send notification:', error);
+      alert('Failed to send notification. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,12 +84,24 @@ const SendNotification = () => {
             >
               <option value="all">All Cardholders</option>
               <option value="pending">Pending Collections</option>
-              <option value="specific">Specific Cards</option>
+              <option value="specific">Specific Mobile Number</option>
             </select>
           </div>
 
+          {formData.type === 'specific' && (
+            <Input
+              label="Mobile Number"
+              name="mobileNumber"
+              type="tel"
+              value={formData.mobileNumber}
+              onChange={handleChange}
+              placeholder="Enter 10-digit mobile number"
+              required
+            />
+          )}
+
           <div style={{ marginTop: '1.5rem' }}>
-            <Button type="submit">Send Notification</Button>
+            <Button type="submit" loading={loading}>Send Notification</Button>
           </div>
         </form>
       </div>

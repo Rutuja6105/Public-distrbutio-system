@@ -181,7 +181,9 @@ const translations = {
     'area': 'Area',
     'download': 'Download',
     'updateProfile': 'Update Profile',
-    'profileUpdatedSuccess': 'Profile updated successfully!'
+    'profileUpdatedSuccess': 'Profile updated successfully!',
+    mobileNumber: 'Mobile Number',
+    validationMobileNumber: 'Valid 10-digit mobile number required'
   },
   hi: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -352,7 +354,9 @@ const translations = {
     'area': 'क्षेत्र',
     'download': 'डाउनलोड',
     'updateProfile': 'प्रोफ़ाइल अपडेट करें',
-    'profileUpdatedSuccess': 'प्रोफ़ाइल सफलतापूर्वक अपडेट की गई!'
+    'profileUpdatedSuccess': 'प्रोफ़ाइल सफलतापूर्वक अपडेट की गई!',
+    mobileNumber: 'मोबाइल नंबर',
+    validationMobileNumber: 'मान्य 10-अंकीय मोबाइल नंबर आवश्यक है'
   },
   mr: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -523,7 +527,9 @@ const translations = {
     'area': 'क्षेत्र',
     'download': 'डाउनलोड',
     'updateProfile': 'प्रोफाइल अपडेट करा',
-    'profileUpdatedSuccess': 'प्रोफाइल यशस्वीरित्या अपडेट झाली!'
+    'profileUpdatedSuccess': 'प्रोफाइल यशस्वीरित्या अपडेट झाली!',
+    mobileNumber: 'मोबाईल नंबर',
+    validationMobileNumber: 'वैध 10-अंकी मोबाईल नंबर आवश्यक आहे'
   },
 };
 

@@ -25,6 +25,7 @@ const initialBeneficiaries = [
     id: 1,
     name: 'Ravi Kumar',
     cardNo: 'RC-1021',
+    phone: '9876543210',
     queueNo: 4,
     status: 'pending',
     address: `${VILLAGE_NAME} Ward 1`,
@@ -35,6 +36,7 @@ const initialBeneficiaries = [
     id: 2,
     name: 'Sita Devi',
     cardNo: 'RC-1022',
+    phone: '9876543211',
     queueNo: 5,
     status: 'pending',
     address: `${VILLAGE_NAME} Ward 2`,
@@ -45,6 +47,7 @@ const initialBeneficiaries = [
     id: 3,
     name: 'Imran Ali',
     cardNo: 'RC-1023',
+    phone: '9876543212',
     queueNo: 6,
     status: 'collected',
     address: `${VILLAGE_NAME} Ward 3`,
@@ -89,6 +92,7 @@ const ShopOwnerDashboardPage = () => {
     headGender: '',
     headIncome: '',
     headAadhaar: '',
+    phone: '',
     rationCardNo: '',
     address: '',
     cardType: 'orange',
@@ -162,6 +166,9 @@ const ShopOwnerDashboardPage = () => {
     }
     if (!beneficiaryForm.headAadhaar.trim() || !aadhaarPattern.test(beneficiaryForm.headAadhaar.trim())) {
       errors.headAadhaar = t('validationAadhaar');
+    }
+    if (!beneficiaryForm.phone.trim() || !/^\d{10}$/.test(beneficiaryForm.phone.trim())) {
+      errors.phone = t('validationMobileNumber') || 'Valid 10-digit phone number required';
     }
 
     if (!beneficiaryForm.rationCardNo.trim()) {
@@ -242,6 +249,7 @@ const ShopOwnerDashboardPage = () => {
               ...item,
               name: beneficiaryForm.headName.trim(),
               cardNo: beneficiaryForm.rationCardNo.trim().toUpperCase(),
+              phone: beneficiaryForm.phone.trim(),
               address: beneficiaryForm.address.trim(),
               cardType: beneficiaryForm.cardType,
               totalMembers: beneficiaryForm.familyMembers.length
@@ -259,6 +267,7 @@ const ShopOwnerDashboardPage = () => {
         id: Date.now(),
         name: beneficiaryForm.headName.trim(),
         cardNo: beneficiaryForm.rationCardNo.trim().toUpperCase(),
+        phone: beneficiaryForm.phone.trim(),
         queueNo: nextQueueNo,
         status: 'pending',
         address: beneficiaryForm.address.trim(),
@@ -283,6 +292,7 @@ const ShopOwnerDashboardPage = () => {
       headAadhaar: '',
       rationCardNo: '',
       address: '',
+      phone: '',
       cardType: 'orange',
       familyMembers: [createEmptyMember()]
     });
@@ -298,6 +308,7 @@ const ShopOwnerDashboardPage = () => {
       headGender: '',
       headIncome: '',
       headAadhaar: '',
+      phone: person.phone || '',
       rationCardNo: person.cardNo,
       address: person.address,
       cardType: person.cardType || 'orange',
@@ -324,6 +335,7 @@ const ShopOwnerDashboardPage = () => {
       headAadhaar: '',
       rationCardNo: '',
       address: '',
+      phone: '',
       cardType: 'orange',
       familyMembers: [createEmptyMember()]
     });
@@ -336,6 +348,9 @@ const ShopOwnerDashboardPage = () => {
 
     if (messageForm.target === 'single' && !messageForm.beneficiaryId) {
       errors.beneficiaryId = t('validationRequiredField', { field: t('beneficiary') });
+    }
+    if (messageForm.target === 'mobile' && (!messageForm.mobileNumber || !/^\d{10}$/.test(messageForm.mobileNumber))) {
+      errors.mobileNumber = t('validationMobileNumber') || 'Please enter a valid 10-digit mobile number';
     }
     if (!messageForm.scheduleDate) {
       errors.scheduleDate = t('validationRequiredField', { field: t('scheduleDate') });
@@ -354,13 +369,14 @@ const ShopOwnerDashboardPage = () => {
       return;
     }
 
+    const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+
     if (messageForm.target === 'single') {
       const beneficiary = beneficiaries.find((item) => item.id === Number(messageForm.beneficiaryId));
       if (!beneficiary) {
         return;
       }
 
-      const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
       setLastNotice(
         t('messageSentNotice', {
           name: beneficiary.name,
@@ -371,7 +387,13 @@ const ShopOwnerDashboardPage = () => {
       return;
     }
 
-    const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+    if (messageForm.target === 'mobile') {
+      setLastNotice(
+        `Message sent to ${messageForm.mobileNumber}: "${messageForm.message}" scheduled for ${scheduleText}`
+      );
+      return;
+    }
+
     setLastNotice(
       t('messageSentAllNotice', {
         count: beneficiaries.length,
@@ -543,6 +565,17 @@ const ShopOwnerDashboardPage = () => {
               </label>
 
               <label>
+                {t('phoneNumber')}
+                <input
+                  type="tel"
+                  maxLength="10"
+                  value={beneficiaryForm.phone}
+                  onChange={(e) => handleBeneficiaryChange('phone', e.target.value)}
+                />
+                {formErrors.phone ? <p className="error-message">{formErrors.phone}</p> : null}
+              </label>
+
+              <label>
                 {t('rationCardNumber')}
                 <input
                   type="text"
@@ -699,10 +732,11 @@ const ShopOwnerDashboardPage = () => {
               >
                 <option value="single">{t('singleBeneficiary')}</option>
                 <option value="all">{t('allBeneficiaries')}</option>
+                <option value="mobile">{t('mobileNumber') || 'Mobile Number'}</option>
               </select>
             </label>
 
-            {messageForm.target === 'single' ? (
+            {messageForm.target === 'single' && (
               <label>
                 {t('beneficiary')}
                 <select
@@ -717,7 +751,22 @@ const ShopOwnerDashboardPage = () => {
                 </select>
                 {noticeErrors.beneficiaryId ? <p className="error-message">{noticeErrors.beneficiaryId}</p> : null}
               </label>
-            ) : (
+            )}
+
+            {messageForm.target === 'mobile' && (
+              <label>
+                {t('mobileNumber') || 'Mobile Number'}
+                <input
+                  type="tel"
+                  placeholder="Enter 10-digit mobile number"
+                  value={messageForm.mobileNumber || ''}
+                  onChange={(e) => setMessageForm({ ...messageForm, mobileNumber: e.target.value })}
+                />
+                {noticeErrors.mobileNumber ? <p className="error-message">{noticeErrors.mobileNumber}</p> : null}
+              </label>
+            )}
+
+            {messageForm.target === 'all' && (
               <div className="broadcast-summary">
                 <strong>{t('allBeneficiaries')}:</strong> {beneficiaries.length}
               </div>
@@ -764,8 +813,9 @@ const ShopOwnerDashboardPage = () => {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th align="left">{t('name')}</th>
+                   <th align="left">{t('name')}</th>
                   <th align="left">{t('cardNumber')}</th>
+                  <th align="left">{t('phoneNumber')}</th>
                   <th align="left">{t('rationCardType')}</th>
                   <th align="left">{t('address')}</th>
                   <th align="left">{t('totalMembers')}</th>
@@ -778,6 +828,7 @@ const ShopOwnerDashboardPage = () => {
                   <tr key={person.id}>
                     <td>{person.name}</td>
                     <td>{person.cardNo}</td>
+                    <td>{person.phone}</td>
                     <td>{t(`cardType_${person.cardType}`) || person.cardType}</td>
                     <td>{person.address}</td>
                     <td>{person.totalMembers}</td>
