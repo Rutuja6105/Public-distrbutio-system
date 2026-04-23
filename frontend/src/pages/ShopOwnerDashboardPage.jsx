@@ -29,8 +29,9 @@ const initialBeneficiaries = [
     queueNo: 4,
     status: 'pending',
     address: `${VILLAGE_NAME} Ward 1`,
-    totalMembers: 4,
-    cardType: 'orange'
+    totalMembers: 1,
+    cardType: 'orange',
+    familyMembers: [{ name: 'Suman Kumar', age: '35', birthDate: '1990-01-01', gender: 'female', occupation: 'Housewife', aadhaar: '123456789012' }]
   },
   {
     id: 2,
@@ -40,8 +41,9 @@ const initialBeneficiaries = [
     queueNo: 5,
     status: 'pending',
     address: `${VILLAGE_NAME} Ward 2`,
-    totalMembers: 5,
-    cardType: 'white'
+    totalMembers: 1,
+    cardType: 'white',
+    familyMembers: [{ name: 'Ram Devi', age: '40', birthDate: '1985-05-05', gender: 'male', occupation: 'Farmer', aadhaar: '223456789012' }]
   },
   {
     id: 3,
@@ -51,8 +53,9 @@ const initialBeneficiaries = [
     queueNo: 6,
     status: 'collected',
     address: `${VILLAGE_NAME} Ward 3`,
-    totalMembers: 3,
-    cardType: 'yellow'
+    totalMembers: 1,
+    cardType: 'yellow',
+    familyMembers: [{ name: 'Sara Ali', age: '25', birthDate: '2000-10-10', gender: 'female', occupation: 'Student', aadhaar: '323456789012' }]
   }
 ];
 
@@ -177,7 +180,9 @@ const ShopOwnerDashboardPage = () => {
       errors.rationCardNo = t('validationRationCard');
     } else if (
       beneficiaries.some(
-        (person) => person.cardNo.toLowerCase() === beneficiaryForm.rationCardNo.trim().toLowerCase()
+        (person) => 
+          person.cardNo.toLowerCase() === beneficiaryForm.rationCardNo.trim().toLowerCase() && 
+          person.id !== editingId
       )
     ) {
       errors.rationCardNo = t('validationDuplicateRationCard');
@@ -252,7 +257,8 @@ const ShopOwnerDashboardPage = () => {
               phone: beneficiaryForm.phone.trim(),
               address: beneficiaryForm.address.trim(),
               cardType: beneficiaryForm.cardType,
-              totalMembers: beneficiaryForm.familyMembers.length
+              totalMembers: beneficiaryForm.familyMembers.length,
+              familyMembers: beneficiaryForm.familyMembers
             }
             : item
         )
@@ -272,7 +278,8 @@ const ShopOwnerDashboardPage = () => {
         status: 'pending',
         address: beneficiaryForm.address.trim(),
         cardType: beneficiaryForm.cardType,
-        totalMembers: beneficiaryForm.familyMembers.length
+        totalMembers: beneficiaryForm.familyMembers.length,
+        familyMembers: beneficiaryForm.familyMembers
       };
 
       setBeneficiaries((prev) => [newBeneficiary, ...prev]);
@@ -312,7 +319,9 @@ const ShopOwnerDashboardPage = () => {
       rationCardNo: person.cardNo,
       address: person.address,
       cardType: person.cardType || 'orange',
-      familyMembers: Array(person.totalMembers).fill(0).map(() => createEmptyMember())
+      familyMembers: person.familyMembers && person.familyMembers.length > 0 
+        ? person.familyMembers 
+        : Array(person.totalMembers || 1).fill(0).map(() => createEmptyMember())
     });
     // Scroll to form
     window.scrollTo({ top: 300, behavior: 'smooth' });
@@ -565,7 +574,7 @@ const ShopOwnerDashboardPage = () => {
               </label>
 
               <label>
-                {t('phoneNumber')}
+                {t('mobileNumber') || 'Mobile Number'}
                 <input
                   type="tel"
                   maxLength="10"
@@ -815,7 +824,7 @@ const ShopOwnerDashboardPage = () => {
                 <tr>
                    <th align="left">{t('name')}</th>
                   <th align="left">{t('cardNumber')}</th>
-                  <th align="left">{t('phoneNumber')}</th>
+                  <th align="left">{t('mobileNumber') || 'Mobile Number'}</th>
                   <th align="left">{t('rationCardType')}</th>
                   <th align="left">{t('address')}</th>
                   <th align="left">{t('totalMembers')}</th>

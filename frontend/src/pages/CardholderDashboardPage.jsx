@@ -51,6 +51,8 @@ const CardholderDashboardPage = () => {
 
               <section className="card">
                 <h2>{t('yourDistributionSchedule')}</h2>
+                <p><strong>{t('name')}:</strong> {user?.name}</p>
+                <p><strong>{t('mobileNumber') || 'Mobile Number'}:</strong> {user?.phone || '9876543210'}</p>
                 <p><strong>{t('date')}:</strong> {schedule.date}</p>
                 <p><strong>{t('time')}:</strong> {schedule.time}</p>
                 <p><strong>{t('shop')}:</strong> {schedule.shop}</p>

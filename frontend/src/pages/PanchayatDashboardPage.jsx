@@ -241,7 +241,7 @@ const PanchayatDashboardPage = () => {
                       <tr>
                         <th align="left">{t('headOfFamily')}</th>
                         <th align="left">{t('rationCardNumber')}</th>
-                        <th align="left">{t('phoneNumber') || 'Phone Number'}</th>
+                        <th align="left">{t('mobileNumber') || 'Mobile Number'}</th>
                         <th align="left">{t('rationCardType')}</th>
                         <th align="left">{t('address')}</th>
                         <th align="left">{t('totalMembers')}</th>
