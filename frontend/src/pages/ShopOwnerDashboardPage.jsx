@@ -264,7 +264,7 @@ const ShopOwnerDashboardPage = () => {
     if (editingId) {
       setBeneficiaries((prev) =>
         prev.map((item) =>
-          item.id === editingId
+          item.id == editingId
             ? {
               ...item,
               name: beneficiaryForm.headName.trim(),
@@ -354,7 +354,7 @@ const ShopOwnerDashboardPage = () => {
 
   const handleDeleteBeneficiary = (id) => {
     if (window.confirm('Are you sure you want to delete this beneficiary?')) {
-      setBeneficiaries((prev) => prev.filter((item) => item.id !== id));
+      setBeneficiaries((prev) => prev.filter((item) => item.id != id));
     }
   };
 
@@ -406,7 +406,7 @@ const ShopOwnerDashboardPage = () => {
     const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
 
     if (messageForm.target === 'single') {
-      const beneficiary = beneficiaries.find((item) => item.id === Number(messageForm.beneficiaryId));
+      const beneficiary = beneficiaries.find((item) => item.id == messageForm.beneficiaryId);
       if (!beneficiary) {
         return;
       }
