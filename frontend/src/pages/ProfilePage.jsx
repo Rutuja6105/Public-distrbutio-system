@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from '../components/common/Header';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { User, Package, Settings, CreditCard, ChevronRight, LogOut } from 'lucide-react';
+import { User, Package, Settings, CreditCard, ChevronRight, LogOut, Camera } from 'lucide-react';
 import '../styles/profile.css';
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserProfile } = useAuth();
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef(null);
+  
   const [formData, setFormData] = useState({
     firstName: user?.name?.split(' ')[0] || '',
     lastName: user?.name?.split(' ').slice(1).join(' ') || '',
-    gender: 'male',
+    gender: user?.gender || 'male',
     email: user?.email || '',
     phone: user?.phone || '9876543210'
   });
@@ -48,10 +50,44 @@ const ProfilePage = () => {
     }
   ];
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    setIsEditing(false);
-    alert('Profile updated significantly!');
+    try {
+      const updatedName = `${formData.firstName} ${formData.lastName}`.trim();
+      await updateUserProfile({ 
+        ...user,
+        name: updatedName,
+        gender: formData.gender,
+        email: formData.email,
+        phone: formData.phone
+      });
+      setIsEditing(false);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile.');
+    }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          await updateUserProfile({ profileImage: reader.result });
+          alert('Profile image updated successfully!');
+        } catch (error) {
+          console.error('Error updating profile image:', error);
+          alert('Failed to update profile image.');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -61,9 +97,27 @@ const ProfilePage = () => {
         {/* Sidebar */}
         <div className="profile-sidebar">
           <div className="user-snippet">
-            <div className="avatar-circle">
-              {user?.name?.[0]?.toUpperCase()}
+            <div 
+              className="avatar-circle overflow-hidden relative cursor-pointer"
+              onClick={handleImageClick}
+              title="Click to change profile image"
+            >
+              {user?.profileImage ? (
+                <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                user?.name?.[0]?.toUpperCase()
+              )}
+              <div className="absolute bottom-0 right-0 bg-blue-600 p-1 rounded-full text-white">
+                <Camera className="w-3 h-3" />
+              </div>
             </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              style={{ display: 'none' }} 
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             <div>
               <p className="text-xs text-gray-500">Hello,</p>
               <h3 className="font-bold">{user?.name}</h3>

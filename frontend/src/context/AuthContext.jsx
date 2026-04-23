@@ -72,11 +72,19 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUserProfile = async (updatedData) => {
+    const updatedUser = { ...user, ...updatedData };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    return updatedUser;
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
+    updateUserProfile,
     loading
   };
 
