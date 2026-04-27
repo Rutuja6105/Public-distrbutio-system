@@ -116,10 +116,15 @@ const ShopOwnerDashboardPage = () => {
   const [messageForm, setMessageForm] = useState(() => ({
     target: 'single',
     beneficiaryId: initialBeneficiaries[0].id,
+    mobileNumber: '',
     scheduleDate: '',
     scheduleTime: '',
-    message: t('defaultScheduleMessage')
+    message: t('notificationDefaultMessage') || 'Your ration collection is scheduled.'
   }));
+
+  const [whatsappQueue, setWhatsappQueue] = useState([]);
+  const [currentQueueIndex, setCurrentQueueIndex] = useState(-1);
+
   const [beneficiaryForm, setBeneficiaryForm] = useState({
     headName: '',
     headAge: '',
@@ -476,14 +481,38 @@ const ShopOwnerDashboardPage = () => {
     const fullMessage = `${message}\nSchedule: ${scheduleText}`;
 
     if (messageForm.target === 'all') {
-      // For all, we might just open WhatsApp with the message or handle it differently
-      // Usually you can't send to multiple via wa.me link directly
-      alert('WhatsApp broadcast to all is not supported via link. Please send individually.');
+      setWhatsappQueue([...beneficiaries]);
+      setCurrentQueueIndex(0);
+      
+      const firstBeneficiary = beneficiaries[0];
+      const whatsappUrl = `https://wa.me/91${firstBeneficiary.phone}?text=${encodeURIComponent(fullMessage)}`;
+      window.open(whatsappUrl, '_blank');
       return;
     }
 
     const whatsappUrl = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(fullMessage)}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const sendNextInQueue = () => {
+    const nextIndex = currentQueueIndex + 1;
+    if (nextIndex < whatsappQueue.length) {
+      setCurrentQueueIndex(nextIndex);
+      const beneficiary = whatsappQueue[nextIndex];
+      const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+      const fullMessage = `${messageForm.message}\nSchedule: ${scheduleText}`;
+      const whatsappUrl = `https://wa.me/91${beneficiary.phone}?text=${encodeURIComponent(fullMessage)}`;
+      window.open(whatsappUrl, '_blank');
+    } else {
+      setWhatsappQueue([]);
+      setCurrentQueueIndex(-1);
+      alert('Broadcast complete!');
+    }
+  };
+
+  const cancelQueue = () => {
+    setWhatsappQueue([]);
+    setCurrentQueueIndex(-1);
   };
 
   const updateCollectionStatus = (id, status) => {
@@ -879,11 +908,55 @@ const ShopOwnerDashboardPage = () => {
                 className="action-button secondary-action" 
                 style={{ flex: 1, backgroundColor: '#25D366', color: 'white', border: 'none' }}
                 onClick={handleSendWhatsApp}
+                disabled={currentQueueIndex !== -1}
               >
-                {t('sendViaWhatsApp') || 'Send via WhatsApp'}
+                {messageForm.target === 'all' ? `${t('sendViaWhatsApp')} (All)` : t('sendViaWhatsApp')}
               </button>
             </div>
           </form>
+
+          {whatsappQueue.length > 0 && (
+            <div className="card" style={{ marginTop: '1.5rem', border: '2px solid #25D366', backgroundColor: 'rgba(37, 211, 102, 0.1)' }}>
+              <h3 style={{ color: '#25D366', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                🟢 WhatsApp Broadcast Queue
+              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ margin: 0 }}>
+                    <strong>Sending to:</strong> {whatsappQueue[currentQueueIndex]?.name}
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                    Progress: {currentQueueIndex + 1} of {whatsappQueue.length}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button 
+                    className="action-button primary-action" 
+                    style={{ backgroundColor: '#25D366', border: 'none', minWidth: '120px' }}
+                    onClick={sendNextInQueue}
+                  >
+                    {currentQueueIndex === whatsappQueue.length - 1 ? 'Finish' : 'Send Next →'}
+                  </button>
+                  <button 
+                    className="action-button danger-action" 
+                    style={{ minWidth: '100px' }}
+                    onClick={cancelQueue}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              <div style={{ marginTop: '1rem', height: '8px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  height: '100%', 
+                  backgroundColor: '#25D366', 
+                  width: `${((currentQueueIndex + 1) / whatsappQueue.length) * 100}%`,
+                  transition: 'width 0.3s ease'
+                }}></div>
+              </div>
+            </div>
+          )}
+
           {lastNotice ? <p className="success-message">{lastNotice}</p> : null}
         </section>
 
