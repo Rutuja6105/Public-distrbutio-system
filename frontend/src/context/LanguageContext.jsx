@@ -183,7 +183,13 @@ const translations = {
     'updateProfile': 'Update Profile',
     'profileUpdatedSuccess': 'Profile updated successfully!',
     mobileNumber: 'Mobile Number',
-    validationMobileNumber: 'Valid 10-digit mobile number required'
+    validationMobileNumber: 'Valid 10-digit mobile number required',
+    edit: 'Edit',
+    delete: 'Delete',
+    whatsapp: 'WhatsApp',
+    sendViaWhatsApp: 'Send via WhatsApp',
+    editBeneficiary: 'Edit Beneficiary',
+    cancel: 'Cancel'
   },
   hi: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -356,7 +362,13 @@ const translations = {
     'updateProfile': 'प्रोफ़ाइल अपडेट करें',
     'profileUpdatedSuccess': 'प्रोफ़ाइल सफलतापूर्वक अपडेट की गई!',
     mobileNumber: 'मोबाइल नंबर',
-    validationMobileNumber: 'मान्य 10-अंकीय मोबाइल नंबर आवश्यक है'
+    validationMobileNumber: 'मान्य 10-अंकीय मोबाइल नंबर आवश्यक है',
+    edit: 'संपादित करें',
+    delete: 'हटाएं',
+    whatsapp: 'व्हाट्सएप',
+    sendViaWhatsApp: 'व्हाट्सएप के जरिए भेजें',
+    editBeneficiary: 'लाभार्थी संपादित करें',
+    cancel: 'रद्द करें'
   },
   mr: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -529,7 +541,13 @@ const translations = {
     'updateProfile': 'प्रोफाइल अपडेट करा',
     'profileUpdatedSuccess': 'प्रोफाइल यशस्वीरित्या अपडेट झाली!',
     mobileNumber: 'मोबाईल नंबर',
-    validationMobileNumber: 'वैध 10-अंकी मोबाईल नंबर आवश्यक आहे'
+    validationMobileNumber: 'वैध 10-अंकी मोबाईल नंबर आवश्यक आहे',
+    edit: 'संपादित करा',
+    delete: 'हटवा',
+    whatsapp: 'व्हॉट्सॲप',
+    sendViaWhatsApp: 'व्हॉट्सॲपद्वारे पाठवा',
+    editBeneficiary: 'लाभार्थी संपादित करा',
+    cancel: 'रद्द करा'
   },
 };
 

@@ -217,10 +217,10 @@ const ShopManagement = () => {
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}>
-                        {t('markResolved') || 'Edit'}
+                        {t('edit')}
                       </button>
                       <button className="btn btn-danger" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}>
-                        {t('logout') || 'Delete'}
+                        {t('delete')}
                       </button>
                     </div>
                   </td>

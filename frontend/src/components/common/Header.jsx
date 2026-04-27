@@ -25,7 +25,7 @@ export const Header = ({ onProfileClick }) => {
           
           <div className="user-info" onClick={onProfileClick}>
             <img 
-              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=3b82f6&color=fff`} 
+              src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=3b82f6&color=fff`} 
               alt="Profile" 
               className="user-avatar"
               onError={(e) => {

@@ -152,7 +152,7 @@ const ProfilePage = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <LogOut className="w-5 h-5 text-blue-600" />
-                Logout
+                {t('logout')}
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@ const ProfilePage = () => {
           <div className="content-header">
             <h2 className="text-lg font-bold">Personal Information</h2>
             {!isEditing && (
-              <span className="edit-link" onClick={() => setIsEditing(true)}>Edit</span>
+              <span className="edit-link" onClick={() => setIsEditing(true)}>{t('edit')}</span>
             )}
           </div>
 
@@ -192,7 +192,25 @@ const ProfilePage = () => {
             </div>
 
             {isEditing && (
-              <button type="submit" className="save-btn mb-8">SAVE</button>
+              <div className="flex gap-4 mb-8">
+                <button type="submit" className="save-btn">SAVE</button>
+                <button 
+                  type="button" 
+                  className="cancel-btn"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setFormData({
+                      firstName: user?.name?.split(' ')[0] || '',
+                      lastName: user?.name?.split(' ').slice(1).join(' ') || '',
+                      gender: user?.gender || 'male',
+                      email: user?.email || '',
+                      phone: user?.phone || '9876543210'
+                    });
+                  }}
+                >
+                  {t('cancel')}
+                </button>
+              </div>
             )}
 
             <div className="info-section mb-12">
@@ -226,7 +244,7 @@ const ProfilePage = () => {
             <div className="info-section mb-12">
               <div className="flex items-center gap-4 mb-4">
                 <h3 className="text-lg font-semibold m-0">Email Address</h3>
-                {!isEditing && <span className="edit-link" onClick={() => setIsEditing(true)}>Edit</span>}
+                {!isEditing && <span className="edit-link" onClick={() => setIsEditing(true)}>{t('edit')}</span>}
               </div>
               <input
                 type="email"
@@ -240,7 +258,7 @@ const ProfilePage = () => {
             <div className="info-section">
               <div className="flex items-center gap-4 mb-4">
                 <h3 className="text-lg font-semibold m-0">Mobile Number</h3>
-                {!isEditing && <span className="edit-link" onClick={() => setIsEditing(true)}>Edit</span>}
+                {!isEditing && <span className="edit-link" onClick={() => setIsEditing(true)}>{t('edit')}</span>}
               </div>
               <input
                 type="tel"

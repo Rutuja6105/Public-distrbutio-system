@@ -7,16 +7,16 @@ const HoldersList = () => {
   const [selectedHolder, setSelectedHolder] = useState(null);
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  
+
   const holders = [
-    { id: 'RC001', name: 'Ramesh Kumar', phone: '9876543210', address: 'Street 1, Area A', members: 4 },
-    { id: 'RC002', name: 'Sunita Devi', phone: '9876543211', address: 'Street 2, Area B', members: 5 },
-    { id: 'RC003', name: 'Mahesh Patil', phone: '9876543212', address: 'Street 3, Area A', members: 3 },
-    { id: 'RC004', name: 'Anita Sharma', phone: '9876543213', address: 'Street 4, Area C', members: 6 }
+    { id: 'RC001', name: 'Rutuja Jadhav', phone: '7385726593', address: 'Street 1, Area A', members: 4 },
+    { id: 'RC002', name: 'Rahul Jadhav', phone: '9545385426', address: 'Street 2, Area B', members: 5 },
+    { id: 'RC003', name: 'Rahul Jadhav', phone: '7972943133', address: 'Street 3, Area A', members: 3 },
+    { id: 'RC004', name: 'Vishwajeet Jadhav', phone: '9405236511', address: 'Street 4, Area C', members: 6 }
   ];
 
-  const filtered = holders.filter(h => 
-    h.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filtered = holders.filter(h =>
+    h.name.toLowerCase().includes(search.toLowerCase()) ||
     h.id.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -25,7 +25,7 @@ const HoldersList = () => {
     if (!message.trim()) return;
 
     setIsSending(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       console.log(`Sending message to ${selectedHolder.phone}: ${message}`);
@@ -77,8 +77,8 @@ const HoldersList = () => {
                       <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}>
                         View
                       </button>
-                      <button 
-                        className="btn btn-primary" 
+                      <button
+                        className="btn btn-primary"
                         style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }}
                         onClick={() => setSelectedHolder(holder)}
                       >
@@ -122,16 +122,16 @@ const HoldersList = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <Button 
-                  type="button" 
-                  variant="secondary" 
+                <Button
+                  type="button"
+                  variant="secondary"
                   onClick={() => setSelectedHolder(null)}
                   disabled={isSending}
                 >
                   Cancel
                 </Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   variant="primary"
                   disabled={isSending || !message.trim()}
                 >

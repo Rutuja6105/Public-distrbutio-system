@@ -148,6 +148,22 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+.cancel-btn {
+  background: white;
+  color: #fb641b;
+  border: 1px solid #fb641b;
+  padding: 0.8rem 2.5rem;
+  border-radius: 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #fff5f0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
 @media (max-width: 768px) {
   .profile-container {
     grid-template-columns: 1fr;

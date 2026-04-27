@@ -437,6 +437,38 @@ const ShopOwnerDashboardPage = () => {
     );
   };
 
+  const handleSendWhatsApp = () => {
+    let phoneNumber = '';
+    let message = messageForm.message;
+
+    if (messageForm.target === 'single') {
+      const beneficiary = beneficiaries.find(item => item.id == messageForm.beneficiaryId);
+      if (beneficiary) {
+        phoneNumber = beneficiary.phone;
+      }
+    } else if (messageForm.target === 'mobile') {
+      phoneNumber = messageForm.mobileNumber;
+    }
+
+    if (!phoneNumber && messageForm.target !== 'all') {
+      alert('Please select a beneficiary or enter a mobile number.');
+      return;
+    }
+
+    const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+    const fullMessage = `${message}\nSchedule: ${scheduleText}`;
+
+    if (messageForm.target === 'all') {
+      // For all, we might just open WhatsApp with the message or handle it differently
+      // Usually you can't send to multiple via wa.me link directly
+      alert('WhatsApp broadcast to all is not supported via link. Please send individually.');
+      return;
+    }
+
+    const whatsappUrl = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(fullMessage)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const updateCollectionStatus = (id, status) => {
     setBeneficiaries((prev) =>
       prev.map((item) => (item.id === id ? { ...item, status } : item))
@@ -514,7 +546,7 @@ const ShopOwnerDashboardPage = () => {
         </div>
 
         <section className="card">
-          <h2>{editingId ? 'Edit Beneficiary' : t('addBeneficiaryTitle')}</h2>
+          <h2>{editingId ? t('editBeneficiary') : t('addBeneficiaryTitle')}</h2>
           <form onSubmit={handleAddBeneficiary}>
             <div className="grid grid-cols-3" style={{ columnGap: '1rem', rowGap: '1rem', marginBottom: '2rem' }}>
               <label>
@@ -731,7 +763,7 @@ const ShopOwnerDashboardPage = () => {
               </button>
               {editingId && (
                 <button type="button" className="action-button secondary-action" onClick={handleCancelEdit}>
-                  Cancel
+                  {t('cancel')}
                 </button>
               )}
               <button type="button" className="action-button secondary-action" onClick={addFamilyMember}>
@@ -823,7 +855,17 @@ const ShopOwnerDashboardPage = () => {
               {noticeErrors.message ? <p className="error-message">{noticeErrors.message}</p> : null}
             </label>
 
-            <button type="submit" className="action-button primary-action">{t('sendNotice')}</button>
+            <div style={{ display: 'flex', gap: '1rem', gridColumn: 'span 2' }}>
+              <button type="submit" className="action-button primary-action" style={{ flex: 1 }}>{t('sendNotice')}</button>
+              <button 
+                type="button" 
+                className="action-button secondary-action" 
+                style={{ flex: 1, backgroundColor: '#25D366', color: 'white', border: 'none' }}
+                onClick={handleSendWhatsApp}
+              >
+                {t('sendViaWhatsApp') || 'Send via WhatsApp'}
+              </button>
+            </div>
           </form>
           {lastNotice ? <p className="success-message">{lastNotice}</p> : null}
         </section>
@@ -862,7 +904,7 @@ const ShopOwnerDashboardPage = () => {
                           style={{ minHeight: '32px', padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
                           onClick={() => handleEditBeneficiary(person)}
                         >
-                          Edit
+                          {t('edit')}
                         </button>
                         <button
                           type="button"
@@ -870,7 +912,7 @@ const ShopOwnerDashboardPage = () => {
                           style={{ minHeight: '32px', padding: '0.4rem 0.8rem', fontSize: '0.8rem', marginTop: 0 }}
                           onClick={() => handleDeleteBeneficiary(person.id)}
                         >
-                          Delete
+                          {t('delete')}
                         </button>
                       </div>
                     </td>
