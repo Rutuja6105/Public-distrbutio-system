@@ -9,6 +9,7 @@ const Profile = () => {
   const { t } = useLanguage();
   const fileInputRef = useRef(null);
   
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -50,6 +51,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       await updateUserProfile(formData);
+      setIsEditing(false);
       alert('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -60,7 +62,15 @@ const Profile = () => {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title">Profile</h1>
+        <h1 className="page-title">{t('profile')}</h1>
+        {!isEditing && (
+          <Button 
+            variant="secondary" 
+            onClick={() => setIsEditing(true)}
+          >
+            {t('edit')}
+          </Button>
+        )}
       </div>
 
       <div className="card">
@@ -102,6 +112,7 @@ const Profile = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              disabled={!isEditing}
             />
             <Input
               label="Email"
@@ -109,6 +120,7 @@ const Profile = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              disabled={!isEditing}
             />
             <Input
               label="Phone Number"
@@ -116,6 +128,7 @@ const Profile = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              disabled={!isEditing}
             />
             <Input
               label="Ration Card Number"
@@ -130,6 +143,7 @@ const Profile = () => {
               name="familyMembers"
               value={formData.familyMembers}
               onChange={handleChange}
+              disabled={!isEditing}
             />
           </div>
 
@@ -138,27 +152,31 @@ const Profile = () => {
             name="address"
             value={formData.address}
             onChange={handleChange}
+            disabled={!isEditing}
           />
 
-          <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
-            <Button type="submit">{t('updateProfile') || 'Update Profile'}</Button>
-            <Button 
-              type="button" 
-              variant="secondary"
-              onClick={() => {
-                setFormData({
-                  name: user?.name || '',
-                  email: user?.email || '',
-                  phone: user?.phone || '9876543210',
-                  address: user?.address || '123 Main Street, City',
-                  rationCardNumber: user?.rationCardNumber || 'RC123456789',
-                  familyMembers: user?.familyMembers || '4'
-                });
-              }}
-            >
-              {t('cancel')}
-            </Button>
-          </div>
+          {isEditing && (
+            <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+              <Button type="submit">{t('updateProfile') || 'Update Profile'}</Button>
+              <Button 
+                type="button" 
+                variant="secondary"
+                onClick={() => {
+                  setIsEditing(false);
+                  setFormData({
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    phone: user?.phone || '9876543210',
+                    address: user?.address || '123 Main Street, City',
+                    rationCardNumber: user?.rationCardNumber || 'RC123456789',
+                    familyMembers: user?.familyMembers || '4'
+                  });
+                }}
+              >
+                {t('cancel')}
+              </Button>
+            </div>
+          )}
         </form>
       </div>
     </div>

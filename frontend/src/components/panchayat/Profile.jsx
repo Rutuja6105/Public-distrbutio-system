@@ -7,6 +7,7 @@ const Profile = () => {
   const { t } = useLanguage();
   const fileInputRef = useRef(null);
   
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -47,6 +48,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       await updateUserProfile(formData);
+      setIsEditing(false);
       alert(t('profileUpdatedSuccess') || 'Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -58,6 +60,15 @@ const Profile = () => {
     <div>
       <div className="page-header">
         <h1 className="page-title">{t('profile')}</h1>
+        {!isEditing && (
+          <button 
+            className="action-button secondary-action" 
+            onClick={() => setIsEditing(true)}
+            style={{ width: 'auto', padding: '0.5rem 1.5rem' }}
+          >
+            {t('edit')}
+          </button>
+        )}
       </div>
 
       <div className="card">
@@ -100,6 +111,7 @@ const Profile = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                disabled={!isEditing}
               />
             </label>
             <label>
@@ -109,6 +121,7 @@ const Profile = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={!isEditing}
               />
             </label>
             <label>
@@ -118,6 +131,7 @@ const Profile = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                disabled={!isEditing}
               />
             </label>
             <label>
@@ -141,26 +155,29 @@ const Profile = () => {
             />
           </label>
 
-          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem' }}>
-            <button type="submit" className="action-button primary-action">
-              {t('updateProfile') || 'Update Profile'}
-            </button>
-            <button 
-              type="button" 
-              className="action-button secondary-action"
-              onClick={() => {
-                setFormData({
-                  name: user?.name || '',
-                  email: user?.email || '',
-                  phone: user?.phone || '9988776655',
-                  village: user?.village || 'Narshingpur',
-                  designation: user?.designation || 'Sarpanch'
-                });
-              }}
-            >
-              {t('cancel')}
-            </button>
-          </div>
+          {isEditing && (
+            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem' }}>
+              <button type="submit" className="action-button primary-action">
+                {t('updateProfile') || 'Update Profile'}
+              </button>
+              <button 
+                type="button" 
+                className="action-button secondary-action"
+                onClick={() => {
+                  setIsEditing(false);
+                  setFormData({
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    phone: user?.phone || '9988776655',
+                    village: user?.village || 'Narshingpur',
+                    designation: user?.designation || 'Sarpanch'
+                  });
+                }}
+              >
+                {t('cancel')}
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>
