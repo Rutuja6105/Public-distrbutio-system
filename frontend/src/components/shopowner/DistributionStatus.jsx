@@ -2,10 +2,10 @@ import React from 'react';
 
 const DistributionStatus = () => {
   const distributions = [
-    { id: 'RC001', name: 'Ramesh Kumar', items: 'Rice 10kg, Wheat 5kg', status: 'completed', date: '2026-01-17' },
-    { id: 'RC002', name: 'Sunita Devi', items: 'Sugar 2kg, Oil 1L', status: 'completed', date: '2026-01-17' },
-    { id: 'RC003', name: 'Mahesh Patil', items: 'Rice 5kg', status: 'pending', date: '2026-01-17' },
-    { id: 'RC004', name: 'Anita Sharma', items: 'Wheat 10kg, Dal 2kg', status: 'pending', date: '2026-01-17' }
+    { id: 'RC001', name: 'Rutuja Jadhav', items: 'Rice 10kg, Wheat 5kg', status: 'completed', date: '2026-01-17' },
+    { id: 'RC002', name: 'Rahul Jadhav', items: 'Sugar 2kg, Oil 1L', status: 'completed', date: '2026-01-17' },
+    { id: 'RC003', name: 'Rahul Jadhav', items: 'Rice 5kg', status: 'pending', date: '2026-01-17' },
+    { id: 'RC004', name: 'Vishwajeet Jadhav', items: 'Wheat 10kg, Dal 2kg', status: 'pending', date: '2026-01-17' }
   ];
 
   return (
