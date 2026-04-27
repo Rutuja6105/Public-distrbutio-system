@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
-const Profile = () => {
+const Profile = ({ onBack }) => {
   const { user, updateUserProfile } = useAuth();
   const { t } = useLanguage();
   const fileInputRef = useRef(null);
@@ -58,13 +58,20 @@ const Profile = () => {
 
   return (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">{t('profile')}</h1>
+      <div className="page-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button 
+          className="action-button secondary-action" 
+          onClick={onBack}
+          style={{ width: 'auto', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          ← {t('backToDashboard')}
+        </button>
+        <h1 className="page-title" style={{ margin: 0 }}>{t('profile')}</h1>
         {!isEditing && (
           <button 
             className="action-button secondary-action" 
             onClick={() => setIsEditing(true)}
-            style={{ width: 'auto', padding: '0.5rem 1.5rem' }}
+            style={{ width: 'auto', padding: '0.5rem 1.5rem', marginLeft: 'auto' }}
           >
             {t('edit')}
           </button>

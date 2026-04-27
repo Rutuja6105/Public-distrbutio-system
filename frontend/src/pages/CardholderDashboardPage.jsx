@@ -29,7 +29,7 @@ const CardholderDashboardPage = () => {
       <div className="dashboard-layout">
         <main className="dashboard-main">
           {activeTab === 'profile' ? (
-            <Profile />
+            <Profile onBack={() => setActiveTab('dashboard')} />
           ) : (
             <>
               <div className="page-header">

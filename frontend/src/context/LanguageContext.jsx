@@ -189,7 +189,8 @@ const translations = {
     whatsapp: 'WhatsApp',
     sendViaWhatsApp: 'Send via WhatsApp',
     editBeneficiary: 'Edit Beneficiary',
-    cancel: 'Cancel'
+    cancel: 'Cancel',
+    backToDashboard: 'Back to Dashboard'
   },
   hi: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -368,7 +369,8 @@ const translations = {
     whatsapp: 'व्हाट्सएप',
     sendViaWhatsApp: 'व्हाट्सएप के जरिए भेजें',
     editBeneficiary: 'लाभार्थी संपादित करें',
-    cancel: 'रद्द करें'
+    cancel: 'रद्द करें',
+    backToDashboard: 'डैशबोर्ड पर वापस जाएं'
   },
   mr: {
     appName: 'सार्वजनिक वितरण प्रणाली',
@@ -547,7 +549,8 @@ const translations = {
     whatsapp: 'व्हॉट्सॲप',
     sendViaWhatsApp: 'व्हॉट्सॲपद्वारे पाठवा',
     editBeneficiary: 'लाभार्थी संपादित करा',
-    cancel: 'रद्द करा'
+    cancel: 'रद्द करा',
+    backToDashboard: 'डॅशबोर्डवर परत जा'
   },
 };
 
