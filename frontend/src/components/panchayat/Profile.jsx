@@ -141,9 +141,24 @@ const Profile = () => {
             />
           </label>
 
-          <div style={{ marginTop: '1.5rem' }}>
+          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem' }}>
             <button type="submit" className="action-button primary-action">
-              {t('Update Profile') || 'Update Profile'}
+              {t('updateProfile') || 'Update Profile'}
+            </button>
+            <button 
+              type="button" 
+              className="action-button secondary-action"
+              onClick={() => {
+                setFormData({
+                  name: user?.name || '',
+                  email: user?.email || '',
+                  phone: user?.phone || '9988776655',
+                  village: user?.village || 'Narshingpur',
+                  designation: user?.designation || 'Sarpanch'
+                });
+              }}
+            >
+              {t('cancel')}
             </button>
           </div>
         </form>

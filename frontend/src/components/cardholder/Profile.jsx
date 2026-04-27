@@ -140,8 +140,24 @@ const Profile = () => {
             onChange={handleChange}
           />
 
-          <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-            <Button type="submit">Update Profile</Button>
+          <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+            <Button type="submit">{t('updateProfile') || 'Update Profile'}</Button>
+            <Button 
+              type="button" 
+              variant="secondary"
+              onClick={() => {
+                setFormData({
+                  name: user?.name || '',
+                  email: user?.email || '',
+                  phone: user?.phone || '9876543210',
+                  address: user?.address || '123 Main Street, City',
+                  rationCardNumber: user?.rationCardNumber || 'RC123456789',
+                  familyMembers: user?.familyMembers || '4'
+                });
+              }}
+            >
+              {t('cancel')}
+            </Button>
           </div>
         </form>
       </div>
