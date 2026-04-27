@@ -24,16 +24,12 @@ const HoldersList = () => {
     e.preventDefault();
     if (!message.trim()) return;
 
-    setIsSending(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      console.log(`Sending message to ${selectedHolder.phone}: ${message}`);
-      alert(`Message successfully sent to ${selectedHolder.name} (${selectedHolder.phone})`);
-      setIsSending(false);
-      setSelectedHolder(null);
-      setMessage('');
-    }, 1000);
+    const smsUrl = `sms:+91${selectedHolder.phone}?body=${encodeURIComponent(message)}`;
+    window.open(smsUrl, '_blank');
+    
+    setIsSending(false);
+    setSelectedHolder(null);
+    setMessage('');
   };
 
   return (

@@ -124,6 +124,8 @@ const ShopOwnerDashboardPage = () => {
 
   const [whatsappQueue, setWhatsappQueue] = useState([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(-1);
+  const [smsQueue, setSmsQueue] = useState([]);
+  const [currentSmsIndex, setCurrentSmsIndex] = useState(-1);
 
   const [beneficiaryForm, setBeneficiaryForm] = useState({
     headName: '',
@@ -426,37 +428,54 @@ const ShopOwnerDashboardPage = () => {
     }
 
     const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+    const fullMessage = `${messageForm.message}\nSchedule: ${scheduleText}`;
 
     if (messageForm.target === 'single') {
-      const beneficiary = beneficiaries.find((item) => item.id == messageForm.beneficiaryId);
-      if (!beneficiary) {
-        return;
+      const beneficiary = beneficiaries.find(item => item.id == messageForm.beneficiaryId);
+      if (beneficiary) {
+        const smsUrl = `sms:+91${beneficiary.phone}?body=${encodeURIComponent(fullMessage)}`;
+        window.open(smsUrl, '_blank');
+        setLastNotice(t('notificationSentSuccess'));
       }
-
-      setLastNotice(
-        t('messageSentNotice', {
-          name: beneficiary.name,
-          message: messageForm.message,
-          schedule: scheduleText
-        })
-      );
       return;
     }
 
     if (messageForm.target === 'mobile') {
-      setLastNotice(
-        `Message sent to ${messageForm.mobileNumber}: "${messageForm.message}" scheduled for ${scheduleText}`
-      );
+      const smsUrl = `sms:+91${messageForm.mobileNumber}?body=${encodeURIComponent(fullMessage)}`;
+      window.open(smsUrl, '_blank');
+      setLastNotice(t('notificationSentSuccess'));
       return;
     }
 
-    setLastNotice(
-      t('messageSentAllNotice', {
-        count: beneficiaries.length,
-        message: messageForm.message,
-        schedule: scheduleText
-      })
-    );
+    if (messageForm.target === 'all') {
+      setSmsQueue([...beneficiaries]);
+      setCurrentSmsIndex(0);
+      const firstBeneficiary = beneficiaries[0];
+      const smsUrl = `sms:+91${firstBeneficiary.phone}?body=${encodeURIComponent(fullMessage)}`;
+      window.open(smsUrl, '_blank');
+      return;
+    }
+  };
+
+  const sendNextSms = () => {
+    const nextIndex = currentSmsIndex + 1;
+    if (nextIndex < smsQueue.length) {
+      setCurrentSmsIndex(nextIndex);
+      const beneficiary = smsQueue[nextIndex];
+      const scheduleText = `${messageForm.scheduleDate || t('today')} ${messageForm.scheduleTime || ''}`.trim();
+      const fullMessage = `${messageForm.message}\nSchedule: ${scheduleText}`;
+      const smsUrl = `sms:+91${beneficiary.phone}?body=${encodeURIComponent(fullMessage)}`;
+      window.open(smsUrl, '_blank');
+    } else {
+      setSmsQueue([]);
+      setCurrentSmsIndex(-1);
+      alert('SMS Broadcast complete!');
+    }
+  };
+
+  const cancelSmsQueue = () => {
+    setSmsQueue([]);
+    setCurrentSmsIndex(-1);
   };
 
   const handleSendWhatsApp = () => {
@@ -902,18 +921,62 @@ const ShopOwnerDashboardPage = () => {
             </label>
 
             <div style={{ display: 'flex', gap: '1rem', gridColumn: 'span 2' }}>
-              <button type="submit" className="action-button primary-action" style={{ flex: 1 }}>{t('sendNotice')}</button>
+              <button type="submit" className="action-button primary-action" style={{ flex: 1 }}>
+                {messageForm.target === 'all' ? `📱 ${t('sendNotice')} (SMS All)` : `📱 ${t('sendNotice')} (SMS)`}
+              </button>
               <button 
                 type="button" 
                 className="action-button secondary-action" 
                 style={{ flex: 1, backgroundColor: '#25D366', color: 'white', border: 'none' }}
                 onClick={handleSendWhatsApp}
-                disabled={currentQueueIndex !== -1}
+                disabled={currentQueueIndex !== -1 || currentSmsIndex !== -1}
               >
-                {messageForm.target === 'all' ? `${t('sendViaWhatsApp')} (All)` : t('sendViaWhatsApp')}
+                {messageForm.target === 'all' ? `💬 ${t('sendViaWhatsApp')} (All)` : `💬 ${t('sendViaWhatsApp')}`}
               </button>
             </div>
           </form>
+
+          {smsQueue.length > 0 && (
+            <div className="card" style={{ marginTop: '1.5rem', border: '2px solid var(--primary-color)', backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>
+              <h3 style={{ color: 'var(--primary-color)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                📱 SMS Broadcast Queue
+              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ margin: 0 }}>
+                    <strong>Sending SMS to:</strong> {smsQueue[currentSmsIndex]?.name}
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                    Progress: {currentSmsIndex + 1} of {smsQueue.length}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button 
+                    className="action-button primary-action" 
+                    style={{ minWidth: '120px' }}
+                    onClick={sendNextSms}
+                  >
+                    {currentSmsIndex === smsQueue.length - 1 ? 'Finish' : 'Next SMS →'}
+                  </button>
+                  <button 
+                    className="action-button danger-action" 
+                    style={{ minWidth: '100px' }}
+                    onClick={cancelSmsQueue}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              <div style={{ marginTop: '1rem', height: '8px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  height: '100%', 
+                  backgroundColor: 'var(--primary-color)', 
+                  width: `${((currentSmsIndex + 1) / smsQueue.length) * 100}%`,
+                  transition: 'width 0.3s ease'
+                }}></div>
+              </div>
+            </div>
+          )}
 
           {whatsappQueue.length > 0 && (
             <div className="card" style={{ marginTop: '1.5rem', border: '2px solid #25D366', backgroundColor: 'rgba(37, 211, 102, 0.1)' }}>
